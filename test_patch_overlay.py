@@ -1,18 +1,25 @@
 import cv2
-import random
 import os
 
 IMG_DIR = "data/patches/images"
 MASK_DIR = "data/patches/masks"
 
-name = random.choice(os.listdir(IMG_DIR))
+os.makedirs("results/visualizations", exist_ok=True)
 
-img = cv2.imread(os.path.join(IMG_DIR, name))
-mask = cv2.imread(os.path.join(MASK_DIR, name), 0)
+files = os.listdir(IMG_DIR)
 
-overlay = img.copy()
-overlay[mask > 0] = [0, 255, 0]
+for i in range(5):
+    name = files[i]
 
-cv2.imwrite("results/visualizations/patch_overlay.png", overlay)
+    img = cv2.imread(os.path.join(IMG_DIR, name))
+    mask = cv2.imread(os.path.join(MASK_DIR, name), 0)
 
-print("Saved overlay for:", name)
+    overlay = img.copy()
+    overlay[mask > 0] = [0, 255, 0]   # create overlay HERE
+
+    cv2.imwrite(
+        f"results/visualizations/patch_overlay_{i}.png",
+        overlay
+    )
+
+    print("Saved:", f"patch_overlay_{i}.png")
