@@ -11,7 +11,7 @@ MODEL_PATH = "results/adc_res_transxnet.pth"
 IMG_DIR = "data/patches/images"
 OUT_DIR = "results/visualizations"
 
-os.makedirs(OUT_DIR, exist_ok=True)
+os.makedirs(OUT_DIR , exist_ok=True)
 
 # Load model
 model = ADCResTransXNet().to(DEVICE)
