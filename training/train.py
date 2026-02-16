@@ -20,9 +20,13 @@ def train():
 
     print("Dataset size:", len(dataset))
 
+    if len(dataset) == 0:
+        print("ERROR: No patches found. Run patch extraction first.")
+        return
+
+    # Split dataset
     train_size = int(0.8 * len(dataset))
     val_size = len(dataset) - train_size
-
     train_ds, val_ds = random_split(dataset, [train_size, val_size])
 
     train_loader = DataLoader(train_ds, batch_size=4, shuffle=True)
@@ -34,12 +38,15 @@ def train():
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
     criterion = DiceBCELoss()
 
-    for epoch in range(5):
+    num_epochs = 5
+
+    for epoch in range(num_epochs):
         model.train()
         epoch_loss = 0
 
-        print(f"\nEpoch {epoch+1}/5")
+        print(f"\nEpoch {epoch+1}/{num_epochs}")
 
+        # Training loop
         for imgs, masks in tqdm(train_loader):
             imgs = imgs.to(DEVICE)
             masks = masks.to(DEVICE)
@@ -55,20 +62,22 @@ def train():
 
         print("Train Loss:", epoch_loss / len(train_loader))
 
-        # Validation
+        # Validation metrics
         model.eval()
         with torch.no_grad():
             imgs, masks = next(iter(val_loader))
-            imgs, masks = imgs.to(DEVICE), masks.to(DEVICE)
+            imgs = imgs.to(DEVICE)
+            masks = masks.to(DEVICE)
+
             preds = model(imgs)
 
             print("Dice:", dice_score(preds, masks).item())
             print("IoU:", iou_score(preds, masks).item())
             print("Recall:", recall_score(preds, masks).item())
 
-    # Save model
-    torch.save(model.state_dict(), "results/adc_res_transxnet.pth")
-    print("Model saved.")
+        # Save checkpoint every epoch
+        torch.save(model.state_dict(), "results/adc_res_transxnet.pth")
+        print("Checkpoint saved to results/adc_res_transxnet.pth")
 
 
 if __name__ == "__main__":

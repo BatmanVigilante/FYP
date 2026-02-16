@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 
+
 class DiceLoss(nn.Module):
     def __init__(self):
         super().__init__()
@@ -10,7 +11,7 @@ class DiceLoss(nn.Module):
         targets = targets.view(-1)
 
         intersection = (preds * targets).sum()
-        dice = (2. * intersection + smooth) / (
+        dice = (2 * intersection + smooth) / (
             preds.sum() + targets.sum() + smooth
         )
 
