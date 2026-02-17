@@ -1,9 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body></body>
+<html>
+<head>
+    <title>Kidney Glomeruli Segmentation</title>
+</head>
+<body>
+    <h2>Upload Renal Biopsy Image</h2>
+
+    <input type="file" id="fileInput">
+    <button onclick="uploadImage()">Predict</button>
+
+    <br><br>
+    <img id="resultImage" width="400"/>
+
+    <script>
+        async function uploadImage() {
+            const fileInput = document.getElementById("fileInput");
+            const file = fileInput.files[0];
+
+            const formData = new FormData();
+            formData.append("file", file);
+
+            const response = await fetch("http://127.0.0.1:5000/predict", {
+                method: "POST",
+                body: formData
+            });
+
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+
+            document.getElementById("resultImage").src = url;
+        }
+    </script>
+</body>
 </html>
