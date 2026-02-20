@@ -1,3 +1,4 @@
+#Important file needs to be revised and trained
 import torch
 from torch.utils.data import DataLoader, random_split
 from tqdm import tqdm
@@ -48,7 +49,7 @@ def train():
 
         # Training loop
         for imgs, masks in tqdm(train_loader):
-            imgs = imgs.to(DEVICE)
+            imgs = imgs.to(DEVICE) 
             masks = masks.to(DEVICE)
 
             preds = model(imgs)
